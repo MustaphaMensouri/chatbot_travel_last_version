@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>وكالة السفر المغربية</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('https://www.royalairmaroc.com/image/journal/article?img_id=8759249&t=1748419472090');
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .chat-container {
+            background: linear-gradient(135deg, #ff6b6b 0%, #667eea 50%, #4ecdc4 100%);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 900px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding: 4px;
+        }
+
+        .inner-container {
+            background: white;
+            border-radius: 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: white;
+            color: black;
+            padding: 30px 24px;
+            text-align: center;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .header-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            margin-top:10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .header-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .header-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .icon-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            background: #f8f9fa;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .message.bot {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 16px 20px;
+            border-radius: 20px;
+            font-size: 15px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .message.user .message-bubble {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-left-radius: 6px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .message.bot .message-bubble {
+            background: white;
+            color: #2d3748;
+            border-bottom-right-radius: 6px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 20px;
+            background: white;
+            border-radius: 20px;
+            border-bottom-right-radius: 6px;
+            max-width: 70%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #cbd5e0;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.4;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+
+        /* Typewriter animation for bot responses */
+        .typewriter-cursor {
+            display: inline-block;
+            background-color: #667eea;
+            width: 2px;
+            height: 1em;
+            animation: blink 1s infinite;
+            margin-right: 2px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .chat-input-container {
+            padding: 20px 24px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 50px;
+            padding: 4px 8px 4px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+
+        .chat-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 15px;
+            color: #2d3748;
+            padding: 12px 0;
+            font-family: inherit;
+        }
+
+        .chat-input::placeholder {
+            color: #a0aec0;
+        }
+
+        .send-button {
+            background: black;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            font-size: 16px;
+            /*box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);*/
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .send-button:active {
+            transform: translateY(0);
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Scrollbar Styling */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .chat-container {
+                height: 95vh;
+                border-radius: 16px;
+            }
+
+            .inner-container {
+                border-radius: 12px;
+            }
+
+            .chat-header {
+                padding: 20px 16px;
+                border-radius: 12px 12px 0 0;
+            }
+
+            .header-title {
+                font-size: 22px;
+            }
+
+            .message-bubble {
+                max-width: 85%;
+            }
+
+            .chat-messages {
+                padding: 16px;
+            }
+
+            .chat-input-container {
+                padding: 16px;
+            }
+        }
+
+        /* Debug styles (hidden by default) */
+        .debug-info {
+            color: #718096;
+            font-size: 11px;
+            margin: 4px 0;
+            font-family: 'Courier New', monospace;
+            background: rgba(237, 242, 247, 0.8);
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-style: italic;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="inner-container">
+            <div class="chat-header">
+                <div class="header-title">
+                    ✨ وكالة السفر المغربية 🏰
+                </div>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be added here -->
+            </div>
+
+            <div class="chat-input-container">
+                <div class="input-wrapper">
+                    <input
+                        type="text"
+                        class="chat-input"
+                        id="chatInput"
+                        placeholder="اكتب رسالتك هنا واستمتع برحلة لا تنسى..."
+                    >
+                    <button class="send-button" id="sendButton">
+                            <i class="fas fa-arrow-up"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendButton = document.getElementById('sendButton');
+
+        // Generate ONE consistent session ID when page loads
+        const sessionId = 'web_user_' + Math.random().toString(36).substr(2, 9);
+        console.log('Session ID:', sessionId);
+
+        // Add initial bot message with typewriter effect
+        window.onload = function() {
+            const welcomeMessage = "مرحباً بك في وكالة السفر المغربية! 🌟\n\nأنا مساعدك الشخصي لتخطيط رحلة أحلامك في المغرب.\n\nيمكنني مساعدتك في:\n• حجز الطيران ✈️\n• حجز الفنادق 🏨\n• اكتشاف الوجهات السياحية 🗻\n• تنظيم الرحلات الصحراوية 🐪\n• حجز الشواطئ والمنتجعات 🏖️\n\nما هي وجهتك المفضلة؟";
+            addBotMessageWithAnimation(welcomeMessage);
+            chatInput.focus();
+        };
+
+        // Send message on Enter
+        chatInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        sendButton.addEventListener('click', sendMessage);
+
+        function addUserMessage(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'message-bubble';
+            bubbleDiv.textContent = message;
+
+            messageDiv.appendChild(bubbleDiv);
+            chatMessages.appendChild(messageDiv);
+
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function addBotMessage(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'message-bubble';
+            bubbleDiv.textContent = message;
+
+            messageDiv.appendChild(bubbleDiv);
+            chatMessages.appendChild(messageDiv);
+
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Animation Speed Presets:
+        // VERY_FAST = 20, FAST = 35, NORMAL = 50, SLOW = 80, VERY_SLOW = 120
+        const ANIMATION_SPEED = 20; // Change this value to adjust global speed
+
+        function addBotMessageWithAnimation(message, delay = ANIMATION_SPEED) {
+            return new Promise((resolve) => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message bot';
+
+                const bubbleDiv = document.createElement('div');
+                bubbleDiv.className = 'message-bubble';
+
+                // Create cursor element
+                const cursor = document.createElement('span');
+                cursor.className = 'typewriter-cursor';
+
+                messageDiv.appendChild(bubbleDiv);
+                chatMessages.appendChild(messageDiv);
+
+                let i = 0;
+                let currentText = '';
+
+                function typeWriter() {
+                    if (i < message.length) {
+                        currentText += message.charAt(i);
+                        bubbleDiv.innerHTML = currentText + '<span class="typewriter-cursor"></span>';
+                        i++;
+
+                        // Scroll to bottom as we type
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                        // Vary the typing speed slightly for more natural feel
+                        const randomDelay = delay + Math.random() * 20; // Reduced variation for smoother feel
+                        setTimeout(typeWriter, randomDelay);
+                    } else {
+                        // Remove cursor when done
+                        bubbleDiv.textContent = message;
+                        resolve();
+                    }
+                }
+
+                // Start typing after a small delay
+                setTimeout(typeWriter, 200); // Reduced initial delay
+            });
+        }
+
+        function addDebugMessage(message) {
+            // Debug messages are hidden by default but can be enabled by adding display: block to .debug-info
+            const div = document.createElement('div');
+            div.className = 'debug-info';
+            div.textContent = `[Debug] ${message}`;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot';
+            typingDiv.id = 'typingIndicator';
+
+            const indicator = document.createElement('div');
+            indicator.className = 'typing-indicator';
+            indicator.style.display = 'flex';
+            indicator.innerHTML = `
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            `;
+
+            typingDiv.appendChild(indicator);
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // Disable input during processing
+            chatInput.disabled = true;
+            sendButton.disabled = true;
+
+            // Add user message
+            addUserMessage(message);
+            chatInput.value = '';
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            // Debug messages (hidden by default)
+            addDebugMessage(`إرسال إلى Rasa: ${message}`);
+            addDebugMessage(`معرف الجلسة: ${sessionId}`);
+
+            // Send message to Rasa server
+            fetch('http://localhost:5005/webhooks/rest/webhook', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    sender: sessionId,
+                    message: message
+                }),
+            })
+            .then(response => {
+                addDebugMessage(`حالة الاستجابة: ${response.status}`);
+
+                return response.text().then(text => {
+                    addDebugMessage(`الاستجابة الخام: ${text}`);
+                    try {
+                        return text ? JSON.parse(text) : [];
+                    } catch (e) {
+                        addDebugMessage(`خطأ في تحليل JSON: ${e.message}`);
+                        return [];
+                    }
+                });
+            })
+            .then(async (data) => {
+                hideTypingIndicator();
+                addDebugMessage(`البيانات المعالجة: ${JSON.stringify(data)}`);
+
+                if (data && data.length > 0) {
+                    // Add each response with typewriter animation
+                    for (let i = 0; i < data.length; i++) {
+                        await addBotMessageWithAnimation(data[i].text);
+                        // Small delay between multiple responses
+                        if (i < data.length - 1) {
+                            await new Promise(resolve => setTimeout(resolve, 500));
+                        }
+                    }
+                } else {
+                    await addBotMessageWithAnimation("عذراً، لم أتمكن من فهم طلبك. هل يمكنك إعادة صياغته؟ 🤔");
+                    addDebugMessage("تحذير: استجابة فارغة من Rasa");
+                }
+
+                // Re-enable input
+                chatInput.disabled = false;
+                sendButton.disabled = false;
+                chatInput.focus();
+            })
+            .catch(async (error) => {
+                hideTypingIndicator();
+                console.error('Error:', error);
+                addDebugMessage(`خطأ في الاتصال: ${error.message}`);
+                await addBotMessageWithAnimation("عذراً، حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى. 😔");
+
+                // Re-enable input
+                chatInput.disabled = false;
+                sendButton.disabled = false;
+                chatInput.focus();
+            });
+        }
+    </script>
+</body>
+</html>

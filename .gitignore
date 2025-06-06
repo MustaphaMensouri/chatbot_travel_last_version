@@ -1,0 +1,7 @@
+.rasa/
+
+
+
+models/
+*.tar.gz
+
